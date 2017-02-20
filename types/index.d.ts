@@ -23,6 +23,6 @@ interface TSPromiseStatic extends PromiseBase {
 
 declare var TSPromise: TSPromiseStatic;
 
-declare module 'ts-promise' {
+declare module 'romagny13-ts-promise' {
     export = TSPromise;
 }

@@ -12,7 +12,7 @@ var banner =
     ' */';
 
 rollup.rollup({
-    entry: "./src/rollup.ts",
+    entry: "./src/main.ts",
     plugins: [typescript({
         typescript: require('typescript')
     })]

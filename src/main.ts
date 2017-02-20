@@ -1,2 +1,3 @@
-export { TSPromise } from './promise';
+import { TSPromise } from './promise';
 
+export default TSPromise;

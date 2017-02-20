@@ -1,6 +1,6 @@
-import * as t from '../src/rollup';
+import { TSPromise } from '../src/promise';
 
-let p1 = new t.TSPromise((resolve, reject) => {
+let p1 = new TSPromise((resolve, reject) => {
     resolve('P1 resolved!');
 });
 
