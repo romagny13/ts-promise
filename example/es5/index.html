@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title></title>
+</head>
+
+<body>
+    <script src="../../dist/ts-promise.js"></script>
+    <script>
+        var p1 = new TSPromise(function (resolve, reject) {
+            resolve('P1 resolved');
+        });
+
+        setTimeout(function () {
+            p1.then((result) => {
+                console.log('completed', result);
+            }, function (reason) {
+                console.log('error', reason);
+            });
+        }, 500);
+    </script>
+</body>
+
+</html>

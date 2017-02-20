@@ -1,2 +1,2 @@
-# ts-promise
-TypeScript Promise
+# TypeScript Promise
+

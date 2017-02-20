@@ -1,0 +1,2 @@
+export { TSPromise } from './promise';
+
