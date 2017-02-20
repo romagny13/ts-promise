@@ -4,6 +4,9 @@
 npm i romagny13-ts-promise -S
 ```
 
+[![Build Status](https://travis-ci.org/romagny13/ts-promise.svg?branch=master)](https://travis-ci.org/romagny13/ts-promise)
+
+
 ## Sample with TypeScript
 
 ```js
