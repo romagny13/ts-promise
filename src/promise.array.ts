@@ -1,4 +1,4 @@
-import { isFunction, nameGenerator } from './util';
+import { isFunction, idGen } from './util';
 import { PromiseBase, PromiseState, PromiseMode } from './promise.base';
 import { TSPromise } from './promise';
 
@@ -24,6 +24,7 @@ export class TSPromiseArray extends PromiseBase {
             mode race
             handle success or error on first promise resolved / rejected
         */
+        this._id = idGen.getNewId();
         this._isCompleted = false;
         this._promiseResults = [];
         this._pendingNotify = [];
@@ -89,11 +90,8 @@ export class TSPromiseArray extends PromiseBase {
     }
 
     then(onSuccess: Function, onError?: Function, onNotify?: Function): TSPromise {
-        this._proxy = new TSPromise();
+        this._proxy = new TSPromise(null, this._id);
         this._proxy._parent = this;
-
-        this._id = nameGenerator.getName(this._parent && this._parent._id);
-        this._proxy._id = nameGenerator.getName(this._id);
 
         this.onSuccess = onSuccess;
         this.onError = onError;
