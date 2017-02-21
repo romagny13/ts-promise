@@ -1,5 +1,5 @@
 /*!
- * TSPromise v0.0.4
+ * TSPromise v0.0.5
  * (c) 2017 romagny13
  * Released under the MIT License.
  */
@@ -15,6 +15,7 @@ function __extends(d, b) {
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 }
 
+function isDefined(value) { return typeof value !== 'undefined'; }
 function isFunction(value) { return typeof value === 'function'; }
 var IdGen = (function () {
     function IdGen() {
@@ -187,7 +188,7 @@ var TSPromiseArray = (function (_super) {
         var _this = this;
         promise.then(function (result) {
             _this._doNotification(result);
-            if (result) {
+            if (isDefined(result)) {
                 _this._promiseResults.push(result);
             }
             // push result to result array
@@ -216,7 +217,7 @@ var TSPromiseArray = (function (_super) {
         promises.forEach(function (promise) {
             promise.then(function (result) {
                 if (_this._state !== PromiseState.completed) {
-                    if (result) {
+                    if (isDefined(result)) {
                         _this._promiseResults.push(result);
                     }
                     _this.resolve(result);

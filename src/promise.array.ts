@@ -1,4 +1,4 @@
-import { isFunction, idGen } from './util';
+import { isDefined, isFunction, idGen } from './util';
 import { TSPromiseBase, PromiseState, createChildPromise, PromiseMode } from './promise.base';
 import { TSPromise } from './promise';
 
@@ -59,7 +59,7 @@ export class TSPromiseArray extends TSPromiseBase {
     _nextPromise(promise: TSPromise, promises: TSPromise[], index: number, length: number) {
         promise.then((result?: any) => {
             this._doNotification(result);
-            if (result) { this._promiseResults.push(result); }
+            if (isDefined(result)) { this._promiseResults.push(result); }
             // push result to result array
             index++;
             if (index < length) { this._nextPromise(promises[index], promises, index, length); }
@@ -80,7 +80,7 @@ export class TSPromiseArray extends TSPromiseBase {
         promises.forEach((promise) => {
             promise.then((result?: any) => {
                 if (this._state !== PromiseState.completed) {
-                    if (result) { this._promiseResults.push(result); }
+                    if (isDefined(result)) { this._promiseResults.push(result); }
                     this.resolve(result);
                 }
             }, (reason?: any) => {
