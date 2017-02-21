@@ -3,17 +3,17 @@
 // Definitions by: romagny13 <https://github.com/romagny13>
 // Definitions: https://github.com/DefinitelyTyped/DefinitelyTyped
 
-interface PromiseBase {
+interface TSPromiseBase {
     resolve(result?: any): void;
     reject(reason?: any): void;
 }
 
-interface TSPromiseArray extends PromiseBase {
+interface TSPromiseArray extends TSPromiseBase {
     then(onSuccess: Function, onError?: Function, onNotify?: Function): TSPromiseStatic;
     catch(onError: Function): TSPromiseStatic;
 }
 
-interface TSPromiseStatic extends PromiseBase {
+interface TSPromiseStatic extends TSPromiseBase {
     new (fn?: Function): TSPromiseStatic;
     then(onSuccess: Function, onError?: Function): TSPromiseStatic;
     catch(onError: Function): TSPromiseStatic;

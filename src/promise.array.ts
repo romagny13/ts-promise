@@ -1,13 +1,14 @@
 import { isFunction, idGen } from './util';
-import { PromiseBase, PromiseState, PromiseMode } from './promise.base';
+import { TSPromiseBase, PromiseState, createChildPromise, PromiseMode } from './promise.base';
 import { TSPromise } from './promise';
 
-export class TSPromiseArray extends PromiseBase {
+
+export class TSPromiseArray extends TSPromiseBase {
     _promises: TSPromise[];
     _promiseResults: any[];
     _pendingNotify: any[];
     _mode: PromiseMode;
-    onNotify: Function;
+    _onNotify: Function;
     constructor(promises: TSPromise[], mode: PromiseMode) {
         super();
         /*
@@ -25,7 +26,6 @@ export class TSPromiseArray extends PromiseBase {
             handle success or error on first promise resolved / rejected
         */
         this._id = idGen.getNewId();
-        this._isCompleted = false;
         this._promiseResults = [];
         this._pendingNotify = [];
         this._mode = mode;
@@ -38,18 +38,18 @@ export class TSPromiseArray extends PromiseBase {
         }
     }
 
-    _handleNotifyAll() {
+    _notifyPendings() {
         if (this._pendingNotify.length > 0) {
             this._pendingNotify.forEach((pendingResult) => {
-                this.onNotify(pendingResult);
+                this._onNotify(pendingResult);
             });
             this._pendingNotify = [];
         }
     }
 
-    _onNotify(result?: any) {
-        if (this.onNotify) {
-            this.onNotify(result);
+    _doNotification(result?: any) {
+        if (this._onNotify) {
+            this._onNotify(result);
         }
         else {
             this._pendingNotify.push(result);
@@ -58,7 +58,7 @@ export class TSPromiseArray extends PromiseBase {
 
     _nextPromise(promise: TSPromise, promises: TSPromise[], index: number, length: number) {
         promise.then((result?: any) => {
-            this._onNotify(result);
+            this._doNotification(result);
             if (result) { this._promiseResults.push(result); }
             // push result to result array
             index++;
@@ -79,7 +79,7 @@ export class TSPromiseArray extends PromiseBase {
     _race(promises: TSPromise[]) {
         promises.forEach((promise) => {
             promise.then((result?: any) => {
-                if (!this._isCompleted) {
+                if (this._state !== PromiseState.completed) {
                     if (result) { this._promiseResults.push(result); }
                     this.resolve(result);
                 }
@@ -89,34 +89,33 @@ export class TSPromiseArray extends PromiseBase {
         });
     }
 
-    then(onSuccess: Function, onError?: Function, onNotify?: Function): TSPromise {
-        this._proxy = new TSPromise(null, this._id);
-        this._proxy._parent = this;
+    then(onComplete: Function, onReject?: Function, onNotify?: Function): TSPromise {
+        this._child = createChildPromise(this, this._id);
 
-        this.onSuccess = onSuccess;
-        this.onError = onError;
-        this.onNotify = onNotify;
+        this._onComplete = onComplete;
+        this._onReject = onReject;
+        this._onNotify = onNotify;
 
         // pending notify ?
-        if (isFunction(this.onNotify)) {
-            this._handleNotifyAll();
+        if (isFunction(this._onNotify)) {
+            this._notifyPendings();
         }
-        if (this._state === PromiseState.waitSuccessCallBack) {
-            this._handleSuccess(this._promiseResults);
+        if (this._state === PromiseState.waitCompleteCallBack) {
+            this._doComplete(this._promiseResults);
         }
-        else if (this._state === PromiseState.waitErrorCallBack) {
-            if (isFunction(this.onError)) {
-                this._handleError(this._pending);
+        else if (this._state === PromiseState.waitRejectionCallBack) {
+            if (isFunction(this._onReject)) {
+                this._doRejection(this._pending);
             }
         }
         else {
-            this._state = PromiseState.waitResult;
+            this._state = PromiseState.waitResolveOrReject;
         }
 
-        return this._proxy;
+        return this._child;
     }
 
     catch(onError: Function): TSPromise {
-        return this.then(this.onSuccess, onError, this.onNotify);
+        return this.then(this._onComplete, onError, this._onNotify);
     }
 }

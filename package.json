@@ -1,6 +1,6 @@
 {
   "name": "romagny13-ts-promise",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "TYpeScript Promise",
   "main": "dist/ts-promise.js",
   "typings": "types/index.d.ts",
@@ -16,7 +16,8 @@
     "build:webpack": "cross-env NODE_ENV=production webpack --progress --hide-modules",
     "build": "node build/build.js",
     "lint": "tslint -c tslint.json 'src/**/*.ts'",
-    "test": "karma start"
+    "test": "karma start",
+    "test:browser": "webpack --config webpack.config.test"
   },
   "keywords": [],
   "author": "",

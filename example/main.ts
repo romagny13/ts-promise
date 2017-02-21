@@ -19,20 +19,19 @@ let p2 = new TSPromise((resolve, reject) => {
 });
 
 p2.then((result) => {
-    // console.log('promise 1', 'count:', count, 'result:', result);
+    console.log('promise 1', 'count:', count, 'result:', result);
     count++;
     return count;
 }, (reason) => {
 
 }).then((result) => {
-    //  console.log('promise 2', 'count:', count, 'result:', result);
+    console.log('promise 2', 'count:', count, 'result:', result);
     count++;
     return count;
 }).then((result) => {
-    // console.log('promise 3', 'count:', count, 'result:', result);
+    console.log('promise 3', 'count:', count, 'result:', result);
     count++;
     return count;
 }).then((result) => {
-    // console.log('promise 4', 'count:', count, 'result:', result);
-  console.log(count);
+    console.log('promise 4', 'count:', count, 'result:', result);
 });

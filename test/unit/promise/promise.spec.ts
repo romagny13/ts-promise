@@ -1,12 +1,12 @@
 import { assert } from 'chai';
 import { TSPromise } from '../../../src/promise';
-import { TSPromiseArray } from '../../../src/promise.array';
+ import { TSPromiseArray } from '../../../src/promise.array';
 
 describe('TSPromise and TSPromise all', () => {
 
     describe('TSPromise', () => {
 
-        it('Should resolve (resolve => then)', (done) => {
+       it('Should resolve (resolve => then)', (done) => {
             let r = 'p1 resolved';
 
             let p1 = new TSPromise((resolve, reject) => {
@@ -40,6 +40,7 @@ describe('TSPromise and TSPromise all', () => {
             });
         });
 
+
         it('Should reject (reject => then)', (done) => {
             let r = 'p1 rejected';
 
@@ -56,6 +57,7 @@ describe('TSPromise and TSPromise all', () => {
                 });
             }, 500);
         });
+       
 
         it('Should reject on reject timeout (then => reject)', (done) => {
             let r = 'p1 rejected';
@@ -73,9 +75,9 @@ describe('TSPromise and TSPromise all', () => {
                 done();
             });
 
-        });
+        }); 
 
-        it('Should reject (reject => then) with catch', (done) => {
+       it('Should reject (reject => then) with catch', (done) => {
             let r = 'p1 rejected';
 
             let p1 = new TSPromise((resolve, reject) => {
@@ -92,8 +94,7 @@ describe('TSPromise and TSPromise all', () => {
             }, 500);
         });
 
-
-        it('Should reject on reject timeout (then => reject) with catch', (done) => {
+       it('Should reject on reject timeout (then => reject) with catch', (done) => {
             let r = 'p1 rejected';
 
             let p1 = new TSPromise((resolve, reject) => {
@@ -228,6 +229,23 @@ describe('TSPromise and TSPromise all', () => {
             });
         });
 
+        it('Should chain chatched exption with catch', (done) => {
+            let r = 'error';
+
+            let p1 = new TSPromise((resolve, reject) => {
+                resolve('p1 resolved');
+            });
+
+            p1.then((result) => {
+                throw r;
+            }).catch((reason) => {
+                throw reason;
+            }).catch((reason) => {
+                assert.equal(reason, r);
+                done();
+            });
+        });
+
         it('Should chain multiple resolved promises', (done) => {
             let count = 0;
 
@@ -302,32 +320,32 @@ describe('TSPromise and TSPromise all', () => {
             p1.then((result) => {
                 assert.fail();
             }).catch((reason) => {
-                // console.log('promise 1', 'count:', count, 'result:', reason);
+               // console.log('promise 1', 'count:', count, 'result:', reason);
                 count++;
                 throw reason;
             }).then((result) => {
                 assert.fail();
             }).catch((reason) => {
-                // console.log('promise 2', 'count:', count, 'result:', reason);
-                count++;
-                throw reason;
-            }).then((result) => {
-                assert.fail();
-            }).catch((reason) => {
-                // console.log('promise 3', 'count:', count, 'result:', reason);
+               // console.log('promise 2', 'count:', count, 'result:', reason);
                 count++;
                 throw reason;
             }).then((result) => {
                 assert.fail();
             }).catch((reason) => {
                 // console.log('promise 3', 'count:', count, 'result:', reason);
+                count++;
+                throw reason;
+            }).then((result) => {
+                assert.fail();
+            }).catch((reason) => {
+               // console.log('promise 3', 'count:', count, 'result:', reason);
                 assert.equal(reason, r);
                 assert.equal(count, 3);
                 done();
             });
         });
 
-        it('Should return result after exception', (done) => {
+       it('Should return result after exception', (done) => {
             let r = 'ok';
 
             let p1 = new TSPromise((resolve, reject) => {
@@ -366,6 +384,7 @@ describe('TSPromise and TSPromise all', () => {
 
             setTimeout(() => {
                 TSPromise.all([p1, p2]).then((result) => {
+                    console.log('in')
                     assert.equal(result[0], r);
                     assert.equal(result[1], r2);
                     done();
@@ -375,7 +394,7 @@ describe('TSPromise and TSPromise all', () => {
             }, 500);
         });
 
-        it('Should resolve with on resolve timeout (then => resolve)', (done) => {
+     it('Should resolve with on resolve timeout (then => resolve)', (done) => {
             let r = 'p1 resolved',
                 r2 = 'p2 resolved';
 
