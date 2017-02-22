@@ -8,7 +8,7 @@ Light promise polyfill  easy to understand.
 npm i romagny13-ts-promise -S
 ```
 
-Support (<a href="https://developer.mozilla.org/fr/docs/Web/JavaScript/Reference/Objets_globaux/Promise">documentation</a>):
+Support (<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise">documentation</a>):
 - Promise
 - all (parrallel)
 - race
