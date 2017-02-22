@@ -1,25 +1,19 @@
-// Type definitions for TSPromise 0.0.1
+// Type definitions for TSPromise 1.0.0
 // Project: https://github.com/romagny13/ts-promise
 // Definitions by: romagny13 <https://github.com/romagny13>
 // Definitions: https://github.com/DefinitelyTyped/DefinitelyTyped
 
-interface TSPromiseBase {
-    resolve(result?: any): void;
-    reject(reason?: any): void;
+interface TSPromiseStatic {
+    new(executor?: Function):TSPromiseStatic;
+    resolve(result?: any):void;
+    reject(reason?: any):void;
+    then(onComplete: Function, onRejection?: Function): TSChildPromise;
+    catch(onRejection: Function): TSChildPromise;
+    all(promises: TSPromiseStatic[]): TSPromiseStatic;
+    race(promises: TSPromiseStatic[]): TSPromiseStatic;
 }
 
-interface TSPromiseArray extends TSPromiseBase {
-    then(onSuccess: Function, onError?: Function, onNotify?: Function): TSPromiseStatic;
-    catch(onError: Function): TSPromiseStatic;
-}
-
-interface TSPromiseStatic extends TSPromiseBase {
-    new (fn?: Function): TSPromiseStatic;
-    then(onSuccess: Function, onError?: Function): TSPromiseStatic;
-    catch(onError: Function): TSPromiseStatic;
-    all(promises: any[]): TSPromiseArray;
-    race(promises: any[]): TSPromiseArray;
-}
+interface TSChildPromise extends TSPromiseStatic {}
 
 declare var TSPromise: TSPromiseStatic;
 

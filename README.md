@@ -1,8 +1,17 @@
 # TypeScript Promise
 
+Light promise polyfill  easy to understand.
+
+[![Build Status](https://travis-ci.org/romagny13/ts-promise.svg?branch=master)](https://travis-ci.org/romagny13/ts-promise)
+
 ```
 npm i romagny13-ts-promise -S
 ```
+
+Support :
+- Promise
+- all (parrallel)
+- race
 
 ## Sample with TypeScript
 
@@ -10,6 +19,10 @@ npm i romagny13-ts-promise -S
 import * as TSPromise from 'romagny13-ts-promise';
 
 let p1 = new TSPromise((resolve, reject) => {
+    // support :
+    // - resolve 
+    // - reject
+    // - throw exception
     resolve('P1 resolved!');
 });
 
@@ -20,6 +33,48 @@ setTimeout(() => {
         console.log('error', reason);
     });
 }, 500);
+```
+
+Example: chaining and ignore useless callbacks 
+
+```js
+let p1 = new TSPromise((resolve, reject) => {
+    resolve('p1 resolved');
+});
+
+let p2 = new TSPromise((resolve, reject) => {
+    resolve('p2 resolved');
+});
+
+TSPromise.all([p1, p2]).then((result) => {
+    // support :
+    // - return value
+    // - throw exception
+    return 'return value';
+}).catch(() => { })
+    .catch(() => { })
+    .catch(() => { })
+    .catch(() => { })
+    .then((result) => {
+        // ... result 'return value'
+});
+```
+Or with an exception
+
+```js
+let p1 = new TSPromise((resolve, reject) => {
+    resolve('p1 resolved');
+});
+
+let p2 = new TSPromise((resolve, reject) => {
+    resolve('p2 resolved');
+});
+
+TSPromise.all([p1, p2]).then((result) => {
+    throw 'my error';
+}).catch((reason) => { 
+    // reason 'my error'
+});
 ```
 
 ## es5
