@@ -1,6 +1,6 @@
 {
   "name": "romagny13-ts-promise",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "TYpeScript Promise",
   "main": "dist/ts-promise.js",
   "typings": "types/index.d.ts",
@@ -19,8 +19,16 @@
     "test": "karma start",
     "test:browser": "webpack --config webpack.config.test"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": [
+    "typescript",
+    "promise",
+    "ts-promise"
+  ],
+  "author": "romagny13 <romagny13@yahoo.fr>",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:romagny13/ts-promise.git"
+  },
   "license": "MIT",
   "devDependencies": {
     "@types/chai": "^3.4.34",

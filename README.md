@@ -8,7 +8,7 @@ Light promise polyfill  easy to understand.
 npm i romagny13-ts-promise -S
 ```
 
-Support :
+Support (<a href="https://developer.mozilla.org/fr/docs/Web/JavaScript/Reference/Objets_globaux/Promise">documentation</a>):
 - Promise
 - all (parrallel)
 - race
@@ -19,20 +19,21 @@ Support :
 import * as TSPromise from 'romagny13-ts-promise';
 
 let p1 = new TSPromise((resolve, reject) => {
-    // support :
-    // - resolve 
-    // - reject
-    // - throw exception
-    resolve('P1 resolved!');
+    /* support :
+       - resolve 
+       - reject
+       - throw exception
+    */
+    setTimeout(() => {
+        resolve('P1 resolved!');
+    }, 500);
 });
 
-setTimeout(() => {
-    p1.then((result) => {
-        console.log(result);
-    }, (reason) => {
-        console.log('error', reason);
-    });
-}, 500);
+p1.then((result) => {
+    console.log(result);
+}, (reason) => {
+    console.log('error', reason);
+});
 ```
 
 Example: chaining and ignore useless callbacks 
@@ -47,16 +48,17 @@ let p2 = new TSPromise((resolve, reject) => {
 });
 
 TSPromise.all([p1, p2]).then((result) => {
-    // support :
-    // - return value
-    // - throw exception
+    /* support :
+     - return value
+     - throw exception
+    */
     return 'return value';
 }).catch(() => { })
-    .catch(() => { })
-    .catch(() => { })
-    .catch(() => { })
-    .then((result) => {
-        // ... result 'return value'
+  .catch(() => { })
+  .catch(() => { })
+  .catch(() => { })
+  .then((result) => {
+      // ... result 'return value'
 });
 ```
 Or with an exception
@@ -73,7 +75,7 @@ let p2 = new TSPromise((resolve, reject) => {
 TSPromise.all([p1, p2]).then((result) => {
     throw 'my error';
 }).catch((reason) => { 
-    // reason 'my error'
+    // ... reason 'my error'
 });
 ```
 
