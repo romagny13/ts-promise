@@ -128,7 +128,7 @@ describe('TSPromise and TSPromise all', () => {
         });
 
 
-        it('Should catch throwed exception from promise', (done) => {
+        it('Should catch exception from promise', (done) => {
             let r = 'error';
 
             let p1 = new TSPromise((resolve, reject) => {
@@ -143,7 +143,7 @@ describe('TSPromise and TSPromise all', () => {
             });
         });
 
-        it('Should catch throwed exception from promise with catch', (done) => {
+        it('Should catch exception from promise with catch', (done) => {
             let r = 'error';
 
             let p1 = new TSPromise((resolve, reject) => {
@@ -158,7 +158,7 @@ describe('TSPromise and TSPromise all', () => {
             });
         });
 
-        it('Should catch throwed exception from then', (done) => {
+        it('Should catch exception from then', (done) => {
             let r = 'error';
 
             let p1 = new TSPromise((resolve, reject) => {
@@ -173,7 +173,7 @@ describe('TSPromise and TSPromise all', () => {
             });
         });
 
-        it('Should catch throwed exception from then with catch', (done) => {
+        it('Should catch exception from then with catch', (done) => {
             let r = 'error';
 
             let p1 = new TSPromise((resolve, reject) => {
@@ -209,7 +209,7 @@ describe('TSPromise and TSPromise all', () => {
             });
         });
 
-        it('Should catch throwed exception from chained promise with catch', (done) => {
+        it('Should catch exception from chained promise with catch', (done) => {
             let r = 'error';
 
             let p1 = new TSPromise((resolve, reject) => {
@@ -228,7 +228,7 @@ describe('TSPromise and TSPromise all', () => {
             });
         });
 
-        it('Should chain chatched exption with catch', (done) => {
+        it('Should chain exception with catch', (done) => {
             let r = 'error';
 
             let p1 = new TSPromise((resolve, reject) => {
@@ -570,7 +570,7 @@ describe('TSPromise and TSPromise all', () => {
             }, 500);
         });
 
-        it('Should handle exception and ignore multiples useless then', (done) => {
+        it('Should handle exception and ignore useless then', (done) => {
             let r = 'error';
 
             let p1 = new TSPromise((resolve, reject) => {
@@ -594,7 +594,7 @@ describe('TSPromise and TSPromise all', () => {
                 });
         });
 
-        it('Should handle return value and ignore multiples useless catch', (done) => {
+        it('Should handle return value and ignore useless catch', (done) => {
             let r = 'return value';
 
             let p1 = new TSPromise((resolve, reject) => {
@@ -618,7 +618,7 @@ describe('TSPromise and TSPromise all', () => {
                 });
         });
 
-        it('Should chain resolved promise', (done) => {
+        it('Should chain resolved promises', (done) => {
             let r = 'return result';
             let p1 = new TSPromise((resolve, reject) => {
                 resolve('r1 resolved');
@@ -703,7 +703,7 @@ describe('TSPromise and TSPromise all', () => {
             }, 500);
         });
 
-        it('Should catch exception in then with catch after multi chained unhandled then', (done) => {
+        it('Should catch exception in then and ignore useless then', (done) => {
             let r = 'error';
 
             let p1 = new TSPromise((resolve, reject) => {
@@ -863,7 +863,7 @@ describe('TSPromise and TSPromise all', () => {
 
             });
 
-            it('Should Return result from then and handle next exception and dont handle useless success then', (done) => {
+            it('Should Return result from then and handle next exception and ignore then', (done) => {
                 let r = 'return result';
                 let p1 = new TSPromise((resolve, reject) => {
                     resolve('r1 resolved');
