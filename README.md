@@ -10,10 +10,10 @@ npm i romagny13-ts-promise -S
 
 Support (<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise">documentation</a>):
 - Promise
-- all (parrallel)
+- all (parallel)
 - race
 
-## Sample with TypeScript
+## With TypeScript
 
 ```js
 import * as TSPromise from 'romagny13-ts-promise';
@@ -25,18 +25,24 @@ let p1 = new TSPromise((resolve, reject) => {
        - throw exception
     */
     setTimeout(() => {
-        resolve('P1 resolved!');
+        resolve('P1 resolved');
     }, 500);
 });
 
 p1.then((result) => {
-    console.log(result);
+    /* support :
+     - return value
+     - throw exception
+    */
 }, (reason) => {
-    console.log('error', reason);
+    /* support :
+     - return value
+     - throw exception
+    */
 });
 ```
 
-Example: chaining and ignore useless callbacks 
+Chaining and ignore useless callbacks (example with all)
 
 ```js
 let p1 = new TSPromise((resolve, reject) => {
@@ -48,10 +54,6 @@ let p2 = new TSPromise((resolve, reject) => {
 });
 
 TSPromise.all([p1, p2]).then((result) => {
-    /* support :
-     - return value
-     - throw exception
-    */
     return 'return value';
 }).catch(() => { })
   .catch(() => { })
@@ -89,11 +91,27 @@ TSPromise.all([p1, p2]).then((result) => {
     });
 
     setTimeout(function () {
-        p1.then((result) => {
+        p1.then(function (result) {
             console.log('completed', result);
         }, function (reason) {
             console.log('error', reason);
         });
     }, 500);
 </script>
+```
+
+## Polyfill for IE
+
+```js
+window.Promise = window.Promise || TSPromise;
+
+var p1 = new Promise(function (resolve, reject) {
+    resolve('P1 resolved with IE');
+});
+
+p1.then(function (result) {
+
+}, function (reason) {
+   
+});
 ```

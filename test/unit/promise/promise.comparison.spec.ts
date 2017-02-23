@@ -1,10 +1,14 @@
 import { assert } from 'chai';
 
-describe('Promise and Promise all', () => {
+/*
+real promise test in browser
+*/
+
+describe('Promise', () => {
 
     describe('Promise', () => {
 
-/*        it('Should resolve (resolve => then)', (done) => {
+        it('Should resolve (resolve => then)', (done) => {
             let r = 'p1 resolved';
 
             let p1 = new Promise((resolve, reject) => {
@@ -127,7 +131,7 @@ describe('Promise and Promise all', () => {
         });
 
 
-        it('Should catch throwed exception from promise', (done) => {
+        it('Should catch exception from promise', (done) => {
             let r = 'error';
 
             let p1 = new Promise((resolve, reject) => {
@@ -142,7 +146,7 @@ describe('Promise and Promise all', () => {
             });
         });
 
-        it('Should catch throwed exception from promise with catch', (done) => {
+        it('Should catch exception from promise with catch', (done) => {
             let r = 'error';
 
             let p1 = new Promise((resolve, reject) => {
@@ -157,7 +161,7 @@ describe('Promise and Promise all', () => {
             });
         });
 
-        it('Should catch throwed exception from then', (done) => {
+        it('Should catch exception from then', (done) => {
             let r = 'error';
 
             let p1 = new Promise((resolve, reject) => {
@@ -172,7 +176,7 @@ describe('Promise and Promise all', () => {
             });
         });
 
-        it('Should catch throwed exception from then with catch', (done) => {
+        it('Should catch exception from then with catch', (done) => {
             let r = 'error';
 
             let p1 = new Promise((resolve, reject) => {
@@ -208,7 +212,7 @@ describe('Promise and Promise all', () => {
             });
         });
 
-        it('Should catch throwed exception from chained promise with catch', (done) => {
+        it('Should catch exception from chained promise with catch', (done) => {
             let r = 'error';
 
             let p1 = new Promise((resolve, reject) => {
@@ -227,7 +231,7 @@ describe('Promise and Promise all', () => {
             });
         });
 
-        it('Should chain chatched exption with catch', (done) => {
+        it('Should chain exception with catch', (done) => {
             let r = 'error';
 
             let p1 = new Promise((resolve, reject) => {
@@ -343,6 +347,45 @@ describe('Promise and Promise all', () => {
             });
         });
 
+        it('Should ignore useless catch', (done) => {
+            let r = 'p1 resolved';
+
+            let p1 = new Promise((resolve, reject) => {
+                resolve(r);
+            });
+
+            p1.then((result) => {
+                return result;
+            }).catch(() => { assert.fail(); })
+                .catch(() => { assert.fail(); })
+                .catch(() => { assert.fail(); })
+                .catch(() => { assert.fail(); })
+                .then((result) => {
+                    assert.equal(result, r);
+                    done();
+                });
+        });
+
+        it('Should ignore useless then', (done) => {
+            let r = 'error';
+
+            let p1 = new Promise((resolve, reject) => {
+                resolve(r);
+            });
+
+            p1.then((result) => {
+                throw r;
+            }).then(() => { assert.fail(); })
+                .then(() => { assert.fail(); })
+                .then(() => { assert.fail(); })
+                .then(() => { assert.fail(); })
+                .catch((result) => {
+                    assert.equal(result, r);
+                    done();
+                });
+        });
+
+
         it('Should return result after exception', (done) => {
             let r = 'ok';
 
@@ -366,7 +409,7 @@ describe('Promise and Promise all', () => {
 
     });
 
-    describe('All', () => {
+    describe('all', () => {
 
         it('Should resolve (resolve => then)', (done) => {
             let r = 'p1 resolved',
@@ -431,8 +474,10 @@ describe('Promise and Promise all', () => {
 
             setTimeout(() => {
                 Promise.all([p1, p2]).then((result) => {
+                    console.log('fail')
                     assert.fail();
                 }, (reason) => {
+                    console.log('error', reason)
                     assert.equal(reason, r);
                     done();
                 });
@@ -444,7 +489,9 @@ describe('Promise and Promise all', () => {
                 r2 = 'p2 rejected';
 
             let p1 = new Promise((resolve, reject) => {
-                resolve(r);
+                setTimeout(function () {
+                    resolve(r);
+                }, 1000);
             });
 
             let p2 = new Promise((resolve, reject) => {
@@ -483,18 +530,16 @@ describe('Promise and Promise all', () => {
             }, 500);
         });
 
-        it('Should reject at first promise on timeout (then => reject)', (done) => {
-            let r = 'p1 rejected',
-                r2 = 'p2 rejected';
+
+        it('Should handle exception in promise', (done) => {
+            let r = 'error';
 
             let p1 = new Promise((resolve, reject) => {
-                setTimeout(function () {
-                    reject(r);
-                }, 1000);
+                throw r;
             });
 
             let p2 = new Promise((resolve, reject) => {
-                reject(r2);
+                resolve('r2 resolved');
             });
 
             setTimeout(() => {
@@ -507,7 +552,76 @@ describe('Promise and Promise all', () => {
             }, 500);
         });
 
-        it('Should chain resolved promise', (done) => {
+        it('Should handle exception in then', (done) => {
+            let r = 'error';
+
+            let p1 = new Promise((resolve, reject) => {
+                resolve('r1 resolved');
+            });
+
+            let p2 = new Promise((resolve, reject) => {
+                resolve('r2 resolved');
+            });
+
+            setTimeout(() => {
+                Promise.all([p1, p2]).then((result) => {
+                    throw r;
+                }, (reason) => {
+                    assert.equal(reason, r);
+                    done();
+                });
+            }, 500);
+        });
+
+        it('Should handle exception and ignore useless then', (done) => {
+            let r = 'error';
+
+            let p1 = new Promise((resolve, reject) => {
+                throw r;
+            });
+
+            let p2 = new Promise((resolve, reject) => {
+                resolve('r2 resolved');
+            });
+
+            Promise.all([p1, p2]).then((result) => {
+                assert.fail();
+            })
+                .then(() => { assert.fail(); })
+                .then(() => { assert.fail(); })
+                .then(() => { assert.fail(); })
+                .then(() => { assert.fail(); })
+                .catch((reason) => {
+                    assert.equal(reason, r);
+                    done();
+                });
+        });
+
+        it('Should handle return value and ignore useless catch', (done) => {
+            let r = 'return value';
+
+            let p1 = new Promise((resolve, reject) => {
+                resolve('r1 resolved');
+            });
+
+            let p2 = new Promise((resolve, reject) => {
+                resolve('r2 resolved');
+            });
+
+            Promise.all([p1, p2]).then((result) => {
+                return r;
+            })
+                .catch(() => { assert.fail(); })
+                .catch(() => { assert.fail(); })
+                .catch(() => { assert.fail(); })
+                .catch(() => { assert.fail(); })
+                .then((result) => {
+                    assert.equal(result, r);
+                    done();
+                });
+        });
+
+        it('Should chain resolved promises', (done) => {
             let r = 'return result';
             let p1 = new Promise((resolve, reject) => {
                 resolve('r1 resolved');
@@ -565,13 +679,56 @@ describe('Promise and Promise all', () => {
                 Promise.all([p1, p2]).then((result) => {
                     throw r;
                 }, (reason) => {
-                    assert.fail();
-                }).then((result) => {
-                    assert.fail();
-                }, (reason) => {
                     assert.equal(reason, r);
                     done();
                 });
+            }, 500);
+        });
+
+        it('Should catch exception in then with catch', (done) => {
+            let r = 'error';
+
+            let p1 = new Promise((resolve, reject) => {
+                resolve('r1 resolved');
+            });
+
+            let p2 = new Promise((resolve, reject) => {
+                resolve('p2 resolved');
+            });
+
+            setTimeout(() => {
+                Promise.all([p1, p2]).then((result) => {
+                    throw r;
+                }).catch((reason) => {
+                    assert.equal(reason, r);
+                    done();
+                });
+            }, 500);
+        });
+
+        it('Should catch exception in then and ignore useless then', (done) => {
+            let r = 'error';
+
+            let p1 = new Promise((resolve, reject) => {
+                resolve('r1 resolved');
+            });
+
+            let p2 = new Promise((resolve, reject) => {
+                resolve('p2 resolved');
+            });
+
+            setTimeout(() => {
+                Promise.all([p1, p2]).then((result) => {
+                    throw r;
+                }).then(() => { assert.fail(); })
+                    .then(() => { assert.fail(); })
+                    .then(() => { assert.fail(); })
+                    .then(() => { assert.fail(); })
+                    .then(() => { assert.fail(); })
+                    .catch((reason) => {
+                        assert.equal(reason, r);
+                        done();
+                    });
             }, 500);
         });
 
@@ -602,67 +759,143 @@ describe('Promise and Promise all', () => {
                 });
             }, 500);
         });
+    });
 
-       */
-        describe('Race', () => {
+    describe('race', () => {
 
-            it('Should Resolve first promise resolved', (done) => {
-                let r = 'r3 resolved';
+        it('Should Resolve first promise resolved', (done) => {
+            let r = 'r3 resolved';
+            // 3 promises, the most fastest (p3) should be the first// then all have to be completed and not executed
 
-                let p1 = new Promise((resolve, reject) => {
-                    setTimeout(function () {
-                        resolve('r1 resolved');
-                    }, 1000);
-                });
-
-                let p2 = new Promise((resolve, reject) => {
-                    setTimeout(function () {
-                        resolve('r2 resolved');
-                    }, 1200);
-                });
-
-                let p3 = new Promise((resolve, reject) => {
-                    setTimeout(function () {
-                        resolve(r);
-                    }, 400);
-                });
-
-               setTimeout(() => {
-                    Promise.race([p1, p2, p3]).then((result) => {
-                        assert.equal(result, r);
-                        done();
-                    }, () => {
-                        assert.fail();
-                    });
-                }, 500);
-
+            let p1 = new Promise((resolve, reject) => {
+                setTimeout(function () {
+                    resolve('r1 resolved');
+                }, 1000);
             });
+
+            let p2 = new Promise((resolve, reject) => {
+                setTimeout(function () {
+                    resolve('r2 resolved');
+                }, 1200);
+            });
+
+            let p3 = new Promise((resolve, reject) => {
+                setTimeout(function () {
+                    resolve(r);
+                }, 400);
+            });
+
+            setTimeout(() => {
+                Promise.race([p1, p2, p3]).then((result) => {
+                    assert.equal(result, r);
+                    done();
+                }, () => {
+                    assert.fail();
+                });
+            }, 500);
+
         });
 
-        describe('Manual', () => {
+        it('Should Return result from then', (done) => {
+            let r = 'return result';
+            let p1 = new Promise((resolve, reject) => {
+                resolve('r1 resolved');
+            });
 
-            it('Should Reject', (done) => {
+            let p2 = new Promise((resolve, reject) => {
+                resolve('r2 resolved');
+            });
 
-             /*   let r = 'p1 rejected';
+            setTimeout(() => {
+                Promise.race([p1, p2]).then((result) => {
+                    return r;
+                }, (reason) => {
+                    assert.equal(reason, r);
+                    done();
+                }).then((result) => {
+                    assert.equal(result, r);
+                    done();
+                });
+            }, 500);
 
-                function f1(condition) {
-                    let promise = new Promise();
-                    if (condition) { promise.resolve('p1 resolved'); }
-                    else { promise.reject(r); }
-                    return promise;
-                }
+        });
 
-                let p1 = f1(false);
-                p1.then((result) => {
-                    assert.fail();
+        it('Should Resolve handle exception', (done) => {
+            let r = 'error';
+            let p1 = new Promise((resolve, reject) => {
+                resolve('r1 resolved');
+            });
+
+            let p2 = new Promise((resolve, reject) => {
+                resolve('r2 resolved');
+            });
+
+            setTimeout(() => {
+                Promise.race([p1, p2]).then((result) => {
+                    throw r;
                 }, (reason) => {
                     assert.equal(reason, r);
                     done();
                 });
-*/
-            });
+            }, 500);
+
         });
 
+        it('Should Return result from then and handle next exception', (done) => {
+            let r = 'return result';
+            let p1 = new Promise((resolve, reject) => {
+                resolve('r1 resolved');
+            });
+
+            let p2 = new Promise((resolve, reject) => {
+                resolve('r2 resolved');
+            });
+
+            setTimeout(() => {
+                Promise.race([p1, p2]).then((result) => {
+                    return r;
+                }, (reason) => {
+                    assert.equal(reason, r);
+                    done();
+                }).then((result) => {
+                    throw r;
+                }).catch((reason) => {
+                    assert.equal(reason, r);
+                    done();
+                });
+            }, 500);
+
+        });
+
+        it('Should Return result from then and handle next exception and ignore then', (done) => {
+            let r = 'return result';
+            let p1 = new Promise((resolve, reject) => {
+                resolve('r1 resolved');
+            });
+
+            let p2 = new Promise((resolve, reject) => {
+                resolve('r2 resolved');
+            });
+
+            setTimeout(() => {
+                Promise.race([p1, p2]).then((result) => {
+                    return r;
+                }, (reason) => {
+                    assert.equal(reason, r);
+                    done();
+                }).then((result) => {
+                    throw r;
+                })
+                    .then(() => { assert.fail(); })
+                    .then(() => { assert.fail(); })
+                    .then(() => { assert.fail(); })
+                    .then(() => { assert.fail(); })
+                    .catch((reason) => {
+                        assert.equal(reason, r);
+                        done();
+                    });
+            }, 500);
+
+        });
     });
 });
-
