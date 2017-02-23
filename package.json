@@ -1,7 +1,7 @@
 {
   "name": "romagny13-ts-promise",
   "version": "1.0.2",
-  "description": "TYpeScript Promise",
+  "description": "TypeScript Promise",
   "main": "dist/ts-promise.js",
   "typings": "types/index.d.ts",
   "files": [
