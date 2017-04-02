@@ -1,31 +1,8 @@
 import { TSPromise } from '../src/promise';
+import { TimeWatch } from './timewatch';
 
-function TimeWatch(log) {
-    var self = this;
-    this.log = typeof log === 'boolean' ? log : false;
-    function getCurrentTime() {
-        return (new Date().getTime() / 1000 | 0);
-    }
-
-    function showLog(message) {
-        if (self.log) {
-            console.log(message);
-        }
-    }
-
-    this.start = function () {
-        self.startTime = getCurrentTime();
-    };
-    this.end = function () {
-        self.endTime = getCurrentTime();
-        self.result = self.endTime - self.startTime;
-        showLog("total:" + self.result + "s");
-        return self.result;
-    };
-}
-
-let t = new TimeWatch(true);
-t.start();
+let timeWatch = new TimeWatch(true);
+timeWatch.start();
 
 let p1 = new TSPromise((resolve, reject) => {
     setTimeout(function () {
@@ -53,20 +30,27 @@ let p5 = new TSPromise((resolve, reject) => {
     }, 3000);
 });
 
-
+// all in parallel => 3s
 TSPromise.all([p1, p2, p3, p4, p5]).then((result) => {
     console.log(result);
-    t.end();
+    timeWatch.end();
 });
 
-/*setTimeout(() => {
+
+/*
+
+let p1 = new TSPromise((resolve, reject) => {
+    setTimeout(function () {
+        resolve('P1 resolved!');
+    }, 3000);
+});
+setTimeout(() => {
     p1.then((result) => {
         console.log(result);
     }, (reason) => {
         console.log('error', reason);
     });
 });
-
 
 let count = 0;
 let p2 = new TSPromise((resolve, reject) => {

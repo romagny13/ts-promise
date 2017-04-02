@@ -1,5 +1,5 @@
 /*!
- * TSPromise v1.0.2
+ * TSPromise v1.0.3
  * (c) 2017 romagny13
  * Released under the MIT License.
  */

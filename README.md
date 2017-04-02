@@ -45,13 +45,8 @@ p1.then((result) => {
 Chaining and ignore useless callbacks (example with all)
 
 ```js
-let p1 = new TSPromise((resolve, reject) => {
-    resolve('p1 resolved');
-});
-
-let p2 = new TSPromise((resolve, reject) => {
-    resolve('p2 resolved');
-});
+let p1 = new TSPromise((resolve, reject) =>  resolve('p1 resolved'));
+let p2 = new TSPromise((resolve, reject) =>  resolve('p2 resolved'));
 
 TSPromise.all([p1, p2]).then((result) => {
     return 'return value';
@@ -66,13 +61,8 @@ TSPromise.all([p1, p2]).then((result) => {
 Or with an exception
 
 ```js
-let p1 = new TSPromise((resolve, reject) => {
-    resolve('p1 resolved');
-});
-
-let p2 = new TSPromise((resolve, reject) => {
-    resolve('p2 resolved');
-});
+let p1 = new TSPromise((resolve, reject) =>  resolve('p1 resolved'));
+let p2 = new TSPromise((resolve, reject) =>  resolve('p2 resolved'));
 
 TSPromise.all([p1, p2]).then((result) => {
     throw 'my error';
@@ -87,31 +77,31 @@ TSPromise.all([p1, p2]).then((result) => {
 <script src="node_modules/romagny13-ts-promise/ts-promise.js"></script>
 <script>
     var p1 = new TSPromise(function (resolve, reject) {
-        resolve('P1 resolved');
+        setTimeout(function () {
+            resolve('P1 resolved');
+        }, 500);
     });
 
-    setTimeout(function () {
-        p1.then(function (result) {
-            console.log('completed', result);
-        }, function (reason) {
-            console.log('error', reason);
-        });
-    }, 500);
+    p1.then(function (result) {
+        console.log('completed:', result);
+    }, function (reason) {
+        console.log('error', reason);
+    });
 </script>
 ```
 
-## Polyfill for IE
+## IE Polyfill
 
 ```js
 window.Promise = window.Promise || TSPromise;
 
 var p1 = new Promise(function (resolve, reject) {
-    resolve('P1 resolved with IE');
+    resolve('P1 resolved');
 });
 
 p1.then(function (result) {
 
 }, function (reason) {
-   
+
 });
 ```
