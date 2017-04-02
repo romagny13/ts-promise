@@ -74,7 +74,7 @@ TSPromise.all([p1, p2]).then((result) => {
 ## es5
 
 ```html
-<script src="node_modules/romagny13-ts-promise/ts-promise.js"></script>
+<script src="node_modules/romagny13-ts-promise/dist/ts-promise.js"></script>
 <script>
     var p1 = new TSPromise(function (resolve, reject) {
         setTimeout(function () {
